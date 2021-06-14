@@ -559,8 +559,18 @@ func CreateUser(u *User) (err error) {
 		return ErrBlockedDomain{u.Email}
 	}
 
+	// GIN custom code
+	// Do not allow registration of email addresses not registered 
+	// with the conference owners.
 	if !isOnWhitelist(u.Email) {
 		return ErrNotWhitelisted{u.Email}
+	} else if !whitelistAvailable() && u.Name != "bcadmin" {
+		// Inform users properly if registration cannot proceed due to
+		// Whitelist service unavailability.
+		// Add a special exception to allow user creation "bcadmin" 
+		// during the initial server setup. When setting up the service, 
+		// a whitelist service will not yet be available.
+		return ErrWhitelistUnavailable{u.Email}
 	}
 
 	u.LowerName = strings.ToLower(u.Name)
