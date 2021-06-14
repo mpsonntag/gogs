@@ -48,17 +48,36 @@ func (err ErrBlockedDomain) Error() string {
 	return fmt.Sprintf("user sign up failed")
 }
 
+// GIN custom code
 type ErrNotWhitelisted struct {
 	Email string
 }
 
+// GIN custom code
 func IsErrNotWhitelisted(err error) bool {
 	_, ok := err.(ErrNotWhitelisted)
 	return ok
 }
 
+// GIN custom code
 func (err ErrNotWhitelisted) Error() string {
-	return fmt.Sprintf("Email address not verified")
+	return "Email address not verfied for this conference"
+}
+
+// GIN custom code
+type ErrWhitelistUnavailable struct {
+	Email string
+}
+
+// GIN custom code
+func IsErrWhitelistUnavailable(err error) bool {
+	_, ok := err.(ErrWhitelistUnavailable)
+	return ok
+}
+
+// GIN custom code
+func (err ErrWhitelistUnavailable) Error() string {
+	return "Registration is currently unavailable"
 }
 
 //  ____ ___
