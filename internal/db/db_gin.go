@@ -233,6 +233,26 @@ func isAddressAllowed(email string) bool {
 	return true
 }
 
+// whitelistAvailable returns true if the email 
+// whitelist page is available and returns status OK.
+func whitelistAvailable() bool {
+	// BC20 whitelist location
+	const whitelistlocation = "https://bc20-posters.g-node.org/uploads/emailwhitelist"
+
+	// Fetch whitelist
+	resp, err := http.Get(whitelistlocation)
+	if err != nil {
+		log.Error(2, "Could not access whitelist location: '%s'", err.Error())
+		return false
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		log.Error(2, "Whitelist location not available: '%s'", resp.Status)
+		return false
+	}
+	return true
+}
+
 // isOnWhitelist returns true if the hash of a provided email address 
 // can be found in an external whitelist file.
 // Returns false if the email address hash is not found or the file cannot be accessed.
